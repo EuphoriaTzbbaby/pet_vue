@@ -234,7 +234,7 @@ const debounce = (func: Function, wait: number) => {
   }
 }
 
-// 用户 store
+// 用户 store 666
 const userStore = useUserStore()
 // 初始化认证状态
 userStore.initializeAuth()
