@@ -223,7 +223,7 @@ import { useUserStore } from '../stores/user'
 
 // 🟢 防抖工具函数
 const debounce = (func: Function, wait: number) => {
-  let timeout: NodeJS.Timeout
+  let timeout: ReturnType<typeof setTimeout>
   return function executedFunction(...args: any[]) {
     const later = () => {
       clearTimeout(timeout)
@@ -337,7 +337,7 @@ const fetchUser = async (userId: number) => {
   // 检查缓存是否存在且未过期
   if (userCache[userId] && (now - userCache[userId].cacheTime) < CACHE_EXPIRE_TIME) {
     const user = { ...userCache[userId] }
-    delete user.cacheTime // 移除缓存时间字段
+    // delete user.cacheTime // 移除缓存时间字段
     userMap.set(userId, user)
     return user
   }
@@ -356,7 +356,7 @@ const fetchUser = async (userId: number) => {
     // 如果有过期缓存，降级使用
     if (userCache[userId]) {
       const user = { ...userCache[userId] }
-      delete user.cacheTime
+      // delete user.cacheTime
       userMap.set(userId, user)
       return user
     }
@@ -366,7 +366,7 @@ const fetchUser = async (userId: number) => {
 
 const fetchPostDetail = async (retry = 0) => {
   loading.value = true
-  error.value = false
+  // error.value = false
   try {
     curPost.value = (await getPostById(postId)).data
     if (!curPost.value) {

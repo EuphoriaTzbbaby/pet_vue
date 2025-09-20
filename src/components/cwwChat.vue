@@ -176,7 +176,7 @@ const sendMessage = async () => {
       userMessage, 
       "你是一位可爱的AI宠物",
     )
-    messages.value.push({ role: 'assistant', content: response.data })
+    messages.value.push({ role: 'assistant', content: response })
     await scrollToBottom() // 收到AI回复后滚动到底部
   } catch (error) {
     console.error('API调用失败:', error)
