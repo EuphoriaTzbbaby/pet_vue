@@ -29,17 +29,17 @@ jobs:
       - name: Build project
         run: pnpm run build
 
-      # ✅ 重命名 dist 为 e_learning
-      - name: Rename dist to e_learning
-        run: mv dist e_learning
+      # ✅ 重命名 dist 为 pet
+      - name: Rename dist to pet
+        run: mv dist pet
 
-      - name: Copy e_learning to server
+      - name: Copy pet to server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: 47.101.42.177
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "./e_learning/*"
+          source: "./pet/*"
           target: "/var/www/html/springbootAndVue/html"
 
       - name: Restart Nginx container
