@@ -19,12 +19,14 @@
     "dayjs": "^1.11.13",
     "element-plus": "^2.9.9",
     "lodash": "^4.17.21",
+    "pet-management-system": "link:",
     "pinia": "^3.0.3",
     "vue": "^3.5.13",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.20",
+    "@types/node": "^24.5.2",
     "@vitejs/plugin-vue": "^5.2.2",
     "@vue/tsconfig": "^0.7.0",
     "autoprefixer": "^10.4.21",
