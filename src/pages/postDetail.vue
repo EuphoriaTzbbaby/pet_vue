@@ -207,7 +207,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, nextTick } from 'vue'
+import { ref, computed, onMounted} from 'vue'
 import { ElMessage } from 'element-plus'
 import { ArrowLeft, View, Star, ChatDotRound } from '@element-plus/icons-vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -289,13 +289,13 @@ const sortedComments = computed(() => {
   return sorted
 })
 
-const isPostOwner = computed(() => {
-  return userStore.isAuthenticated && userStore.currentUser?.userId === post.value.userId
-})
+// const isPostOwner = computed(() => {
+//   return userStore.isAuthenticated && userStore.currentUser?.userId === post.value.userId
+// })
 
-const canInteract = computed(() => {
-  return userStore.isAuthenticated && !loading.value
-})
+// const canInteract = computed(() => {
+//   return userStore.isAuthenticated && !loading.value
+// })
 
 // 🟢 优化的用户缓存机制
 interface CachedUser extends Users {
