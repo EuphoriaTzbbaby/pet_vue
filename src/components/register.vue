@@ -56,7 +56,6 @@
           <el-select v-model="form.role" placeholder="请选择角色" style="width: 100%">
             <el-option label="领养人" value="adopter" />
             <el-option label="组织机构" value="organization" />
-            <el-option label="客户" value="admin" />
           </el-select>
         </el-form-item>
 

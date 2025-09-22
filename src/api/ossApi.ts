@@ -15,7 +15,7 @@ export const uploadFile = (file: File, prefix: string, newFileName: string) => {
     fileType: file.type
   })
   
-  return axios.post('http://localhost:7492/tzb/api/oss/upload', formData, {
+  return axios.post(`${import.meta.env.VITE_API_URL}/api/oss/upload`, formData, {
     headers: { 
       // 不要手动设置Content-Type，让浏览器自动设置
       // 'Content-Type': 'multipart/form-data' 
