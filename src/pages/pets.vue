@@ -23,6 +23,7 @@
           role="searchbox"
         />
         <el-button 
+          v-if="userStore.currentUser?.role !== 'adopter'"
           type="primary" 
           @click="showAddDialog = true" 
           size="large"
@@ -31,6 +32,7 @@
           <el-icon><Plus /></el-icon> 添加宠物
         </el-button>
         <el-button 
+          v-if="userStore.currentUser?.role !== 'adopter'"
           type="danger" 
           @click="batchDelete" 
           :disabled="selectedPets.length === 0"
@@ -287,6 +289,7 @@
                 {{ pet.status }}
               </div>
               <el-checkbox 
+                v-if="userStore.currentUser?.role !== 'adopter'"
                 class="select-pet" 
                 v-model="selectedPets" 
                 :label="pet.petId"
@@ -336,7 +339,7 @@
               <div class="pet-description" v-if="pet.description">
                 {{ pet.description.length > 50 ? pet.description.substring(0, 50) + '...' : pet.description }}
               </div>
-              <div class="pet-actions">
+              <div class="pet-actions" v-if="userStore.currentUser?.role !== 'adopter'">
                 <el-button 
                   type="primary" 
                   size="small" 
@@ -360,7 +363,7 @@
       </el-row>
 
       <el-empty v-if="!loading && pets.length === 0" description="暂无宠物数据">
-        <el-button type="primary" @click="showAddDialog = true">添加第一只宠物</el-button>
+        <el-button v-if="userStore.currentUser?.role !== 'adopter'" type="primary" @click="showAddDialog = true">添加第一只宠物</el-button>
       </el-empty>
     </div>
 
@@ -486,14 +489,14 @@
               
               <!-- 宠物相册 -->
               <div v-if="selectedPetMedia.length > 0" class="pet-gallery">
-                <h4>宠物相册 ({{ selectedPetMedia.length }}) - 点击图片设为主图</h4>
+                <h4>宠物相册 ({{ selectedPetMedia.length }}){{ userStore.currentUser?.role !== 'adopter' ? ' - 点击图片设为主图' : '' }}</h4>
                 <div class="gallery-grid">
                   <div 
                     v-for="media in selectedPetMedia" 
                     :key="media.mediaId"
                     class="gallery-item"
                     :class="{ 'active': currentPetImage === media.url }"
-                    @click="switchPetImage(media.url || '')"
+                    @click="userStore.currentUser?.role !== 'adopter' ? switchPetImage(media.url || '') : null"
                   >
                     <el-image 
                       :src="media.url" 
@@ -502,7 +505,7 @@
                       :preview-src-list="selectedPetMedia.map(m => m.url).filter(Boolean)"
                       preview-teleported
                     />
-                    <div class="gallery-overlay">
+                    <div v-if="userStore.currentUser?.role !== 'adopter'" class="gallery-overlay">
                       <el-icon class="switch-icon"><Check /></el-icon>
                       <el-button 
                         type="danger" 
@@ -563,7 +566,8 @@
       </div>
       <template #footer>
         <el-button @click="showDetailDialog = false">关闭</el-button>
-        <el-button type="primary" @click="selectedPet && editPet(selectedPet)">编辑</el-button>
+        <el-button v-if="userStore.currentUser?.role !== 'adopter'" type="primary" @click="selectedPet && editPet(selectedPet)">编辑</el-button>
+        <el-button v-if="userStore.currentUser?.role === 'adopter' && selectedPet?.status === '可领养'" type="success" @click="applyForAdoption">申请领养</el-button>
       </template>
     </el-dialog>
 
@@ -595,6 +599,7 @@ import type { Pet } from '../stores/types'
 import { createPetMedia, getPetMediaByPetId, deletePetMedia, getAllPetMedia } from '../api/petMediaApi'
 import type { PetMedia } from '../api/petMediaApi'
 import { uploadFile } from '../api/ossApi'
+import { createApplication } from '../api/adoptionApplicationsApi'
 import dayjs from 'dayjs'
 import { useUserStore } from '../stores/user'
 
@@ -1051,6 +1056,57 @@ const deleteMedia = async (media: PetMedia) => {
   } catch (error) {
     if (error !== 'cancel') {
       ElMessage.error('删除失败')
+    }
+  }
+}
+
+const applyForAdoption = async () => {
+  if (!selectedPet.value || !userStore.currentUser) return
+  
+  try {
+    // 使用自定义表单对话框
+    const { value: reason } = await ElMessageBox.prompt(
+      '请填写申请理由',
+      '领养申请 - 第1步',
+      {
+        confirmButtonText: '下一步',
+        cancelButtonText: '取消',
+        inputType: 'textarea',
+        inputPlaceholder: '请详细说明您想要领养这只宠物的理由...'
+      }
+    )
+    
+    if (!reason) return
+    
+    const { value: livingCondition } = await ElMessageBox.prompt(
+      '请描述您的居住条件',
+      '领养申请 - 第2步',
+      {
+        confirmButtonText: '提交申请',
+        cancelButtonText: '取消',
+        inputType: 'textarea',
+        inputPlaceholder: '请描述您的居住环境、是否有院子、家庭成员情况等...'
+      }
+    )
+    
+    if (!livingCondition) return
+    
+    // 调用领养申请API
+    await createApplication({
+      petId: selectedPet.value.petId!,
+      userId: userStore.currentUser.userId!,
+      reason,
+      livingCondition,
+      status: 'pending',
+      createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      updatedAt: dayjs().format('YYYY-MM-DD HH:mm:ss')
+    })
+    
+    ElMessage.success(`已成功提交对宠物 ${selectedPet.value.name} 的领养申请！`)
+    showDetailDialog.value = false
+  } catch (error) {
+    if (error !== 'cancel') {
+      ElMessage.error('提交申请失败，请稍后重试')
     }
   }
 }

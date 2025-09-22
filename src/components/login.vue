@@ -136,10 +136,10 @@ const onLogin = async () => {
           const userData = result.user
           if (userData.role === 'organization') {
             router.push('/organization/community')
-          } else if (userData.role === 'student') {
-            router.push('/student/dashboard')
+          } else if (userData.role === 'adopter') {
+            router.push('/adopter/pets')
           } else {
-            router.push('/')
+            router.push('/admin/dashboard')
           }
         } else {
           ElMessage.error(result.error || '登录失败，请检查账号密码')

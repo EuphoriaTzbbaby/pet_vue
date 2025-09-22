@@ -109,19 +109,20 @@ const movePet = (event: MouseEvent) => {
   const mouseX = event.clientX - 40
   const mouseY = event.clientY - 40
   
-  // 计算距离
-  const distance = Math.sqrt(
-    Math.pow(mouseX - petPosition.x, 2) + Math.pow(mouseY - petPosition.y, 2)
-  )
+  // 生成随机角度（0到2π）
+  const randomAngle = Math.random() * 2 * Math.PI
   
-  // 只有当距离大于阈值时才移动
-  if (distance > 80) {
-    targetPosition.x = mouseX
-    targetPosition.y = mouseY
-    
-    if (!isMoving.value) {
-      smoothMovePet()
-    }
+  // 计算在133px圆形边界上的随机位置
+  const radius = 133
+  const offsetX = Math.cos(randomAngle) * radius
+  const offsetY = Math.sin(randomAngle) * radius
+  
+  // 设置目标位置为鼠标位置加上随机偏移
+  targetPosition.x = mouseX + offsetX
+  targetPosition.y = mouseY + offsetY
+  
+  if (!isMoving.value) {
+    smoothMovePet()
   }
 }
 

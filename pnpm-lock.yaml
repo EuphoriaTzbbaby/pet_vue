@@ -11,6 +11,9 @@ importers:
       '@element-plus/icons-vue':
         specifier: ^2.3.2
         version: 2.3.2(vue@3.5.13(typescript@5.7.3))
+      '@heroicons/vue':
+        specifier: ^2.2.0
+        version: 2.2.0(vue@3.5.13(typescript@5.7.3))
       '@tiptap/extension-image':
         specifier: ^3.4.1
         version: 3.4.1(@tiptap/core@3.4.1(@tiptap/pm@3.4.1))
@@ -268,6 +271,11 @@ packages:
 
   '@floating-ui/utils@0.2.9':
     resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
+
+  '@heroicons/vue@2.2.0':
+    resolution: {integrity: sha512-G3dbSxoeEKqbi/DFalhRxJU4mTXJn7GwZ7ae8NuEQzd1bqdd0jAbdaBZlHPcvPD2xI1iGzNVB4k20Un2AguYPw==}
+    peerDependencies:
+      vue: '>= 3'
 
   '@jridgewell/sourcemap-codec@1.5.0':
     resolution: {integrity: sha512-gv3ZRaISU3fjPAgNsriBRqGWQL6quFx04YMPW/zD8XMLsU32mhCCbfbO6KZFLjvYpCZ8zyDEgqsgf+PwPaM7GQ==}
@@ -1321,6 +1329,10 @@ snapshots:
       '@floating-ui/utils': 0.2.9
 
   '@floating-ui/utils@0.2.9': {}
+
+  '@heroicons/vue@2.2.0(vue@3.5.13(typescript@5.7.3))':
+    dependencies:
+      vue: 3.5.13(typescript@5.7.3)
 
   '@jridgewell/sourcemap-codec@1.5.0': {}
 
